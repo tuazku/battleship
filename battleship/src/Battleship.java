@@ -5,7 +5,6 @@ import java.util.Scanner;
  * @author Azamat Turgunbaev
  *
  */
-
 public class Battleship {
 
 	private Scanner in = new Scanner(System.in);
@@ -33,6 +32,7 @@ public class Battleship {
 				mapMy[i][j] = 0;
 			}
 		}
+		
 		for( int i = 0; i < 3; i++ ){
 			
 			for( int j = 0; j < 3; j++ ) {
@@ -40,9 +40,10 @@ public class Battleship {
 				minMaxMap[i][j] = 1;
 				draftMap[i][j] = 1;
 			}
-		}
-		
+		}	
 	}
+	
+/** PLACE SHIPS ON THE MAP **********************************************/
 	
 	public void placeShips() {
 		
@@ -81,6 +82,7 @@ public class Battleship {
 		System.out.println( "--------------" );
 		System.out.println( "    1 2 3");
 		for( int i = 0; i < 3; i++ ){
+			
 			System.out.print( "  " + ( i + 1 ) + "|");
 			for( int j = 0; j < 3; j++ ) {
 				hidedPrint( mapAi, i, j);
@@ -88,10 +90,8 @@ public class Battleship {
 			System.out.println();
 		}
 		
-		
 		System.out.println( "\n--- MY MAP ---" );
 		System.out.println( "--------------" );
-		
 		System.out.println( "    1 2 3");
 		for( int i = 0; i < 3; i++ ){
 			System.out.print( "  " + ( i + 1 ) + "|" );
@@ -259,13 +259,13 @@ public class Battleship {
 	public boolean gameOver() {
 		if( countAiShips == 0 ){
 			System.out.println("--------------");
-			System.out.println("-- YOU WON ---");
+			System.out.println("-- YOU WIN ---");
 			System.out.println("--------------");
 			return true;
 		}
 		else if( countMyShips == 0 ) {
 			System.out.println("--------------");
-			System.out.println("- YOU LOOSED -");
+			System.out.println("- YOU LOOSE --");
 			System.out.println("--------------");
 			return true;
 		}
@@ -282,8 +282,7 @@ public class Battleship {
 			
 			for( int j = 0; j < 3; j++ ) {
 				
-				countMinMax( map, i, j );
-				
+				countMinMax( map, i, j );		
 			}
 		}
 	}
@@ -294,43 +293,44 @@ public class Battleship {
 	public void countMinMax( int map[][], int x, int y ) {
 		
 		int sum = 0;
-		boolean hasGreatVlue = false;
+		boolean hasHitVlue = false;
 		
 		if( ( x + 1 ) < 3 && map[x][y] == 1 && map[x + 1][y] != 0 ) {
 			
-			if( map[x + 1][y] == 3 ) {
-				hasGreatVlue = true;
+			if( map[x + 1][y] >= 3 ) {
+				hasHitVlue = true;
 			}
 			sum++;
 			
 		}	
 		if( ( x - 1 ) >= 0 && map[x][y] == 1 && map[x - 1][y] != 0) {
 			
-			if( map[x - 1][y] == 3 ) {
-				hasGreatVlue = true;
+			if( map[x - 1][y] >= 3 ) {
+				hasHitVlue = true;
 			}
-			sum++;
 			
+			sum++;
 		}
+		
 		if( ( y + 1 ) < 3 && map[x][y] == 1 && map[x][y + 1] != 0) {
 
-			if( map[x][y + 1] == 3 ) {
-				hasGreatVlue = true;
+			if( map[x][y + 1] >= 3 ) {
+				hasHitVlue = true;
 			}
+		
 			sum++;
-			
 		}
 		if( ( y - 1 ) >= 0 && map[x][y] == 1 && map[x][y - 1] != 0) {
 
-			if( map[x][y - 1] == 3 ) {
-				hasGreatVlue = true;
+			if( map[x][y - 1] >= 3 ) {
+				hasHitVlue = true;
 			}
-			sum++;
 			
+			sum++;
 		}
 		
-		if( hasGreatVlue ) {
-			map[x][y] = 5;
+		if( hasHitVlue ) {
+			minMaxMap[x][y] = 5;
 		}
 		else {
 			minMaxMap[x][y] = sum;
@@ -347,11 +347,21 @@ public class Battleship {
 			for( int j = 0; j < 3; j++ ) {
 				
 				minMaxMap[i][j] = draftMap[i][j];
-				System.out.print(minMaxMap[i][j]);
 			}
+			
 			System.out.println();
 		}
 	}
+	
+	public void runGame() {
+		fillMap();
+		placeShips();
+		printMaps();
+		
+		while( !gameOver() ) {
+			shootMy();
+			shootAi();
+			printMaps();
+		}
+	}
 }
-
-
