@@ -172,7 +172,7 @@ public class Battleship {
 			int x = 0;
 			int y = 0;
 			
-			minMax( minMaxMap );
+			minMax( draftMap );
 			
 			for( int i = 0; i < 3; i++ ) {
 				
@@ -273,6 +273,8 @@ public class Battleship {
 			return false;
 		}	
 	}
+
+/** MINIMAX ALGORITHM *************************************************************************************/
 	
 	public void minMax( int map[][] ) {
 				
@@ -285,26 +287,58 @@ public class Battleship {
 			}
 		}
 	}
+
+/** COUNT MINIMAX ***********************************************************************/
+//Counts the optimal shoot
 	
 	public void countMinMax( int map[][], int x, int y ) {
 		
 		int sum = 0;
+		boolean hasGreatVlue = false;
 		
 		if( ( x + 1 ) < 3 && map[x][y] == 1 && map[x + 1][y] != 0 ) {
+			
+			if( map[x + 1][y] == 3 ) {
+				hasGreatVlue = true;
+			}
 			sum++;
+			
 		}	
 		if( ( x - 1 ) >= 0 && map[x][y] == 1 && map[x - 1][y] != 0) {
+			
+			if( map[x - 1][y] == 3 ) {
+				hasGreatVlue = true;
+			}
 			sum++;
+			
 		}
 		if( ( y + 1 ) < 3 && map[x][y] == 1 && map[x][y + 1] != 0) {
+
+			if( map[x][y + 1] == 3 ) {
+				hasGreatVlue = true;
+			}
 			sum++;
+			
 		}
 		if( ( y - 1 ) >= 0 && map[x][y] == 1 && map[x][y - 1] != 0) {
+
+			if( map[x][y - 1] == 3 ) {
+				hasGreatVlue = true;
+			}
 			sum++;
+			
 		}
 		
-		map[x][y] = sum;
+		if( hasGreatVlue ) {
+			map[x][y] = 5;
+		}
+		else {
+			minMaxMap[x][y] = sum;
+		}
 	}
+	
+
+/** RESET MINIMAX MAP ****************************************************************/
 	
 	public void resetMinMaxMap() {
 		
